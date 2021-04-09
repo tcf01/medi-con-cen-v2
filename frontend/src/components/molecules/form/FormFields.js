@@ -1,17 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, TextInput, Text as Title } from 'react-native';
-// import { FontAwesome } from 'react-native-vector-icons/FontAwesome';
+// import FontAwesome  from 'react-native-vector-icons/FontAwesome';
 
 const FormField = ({ iconInfo, formValues, showName, fieldName, type, onChangeHandler, ...props }) => {
-    console.log(formValues, fieldName, showName)
-
-
     return (
         <View style={styles.formFieldWrapper}>
             <Title style={styles.title}>{showName}</Title>
             <View style={styles.action}>
-                {/* {iconInfo !== undefined ? <View {...iconInfo} /> : null} */}
-                <TextInput style={styles.textInput} onValueChange={onChangeHandler} secureTextEntry={type === "password" ? true : false} {...props}>{formValues[fieldName] || ""}</TextInput>
+                {/* {iconInfo !== undefined ? <FontAwesome {...iconInfo} /> : null} */}
+                <TextInput style={styles.textInput} onChangeText={onChangeHandler} secureTextEntry={type === "password" ? true : false} {...props}>{formValues[fieldName] || ""}</TextInput>
             </View>
         </View>
     )

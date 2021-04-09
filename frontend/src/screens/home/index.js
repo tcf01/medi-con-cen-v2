@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { SafeAreaView, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 
-import { Form as LoginForm } from 'molecules/form/index.js';
-import FormField from 'molecules/form/FormFields.js';
+import { Form as LoginForm } from '../../components/molecules/form/index.js';
+import FormField from '../../components/molecules/form/FormFields.js';
 
 const HomeScreen = ({ navigation }) => {
     const [formValues, setFormValues] = useState({ username: "", password: "" })
@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
             placeHolder: 'Enter here',
             type: 'text',
             onChangeHandler: (val) => {
-                console.log(val)
+                console.log(val);
                 setFormValues({ ...formValues, username: val })
             },
             iconInfo: {
@@ -34,8 +34,7 @@ const HomeScreen = ({ navigation }) => {
                 size: 20
             }
         }
-    ]
-
+    ];
 
     return (
         <SafeAreaView>
