@@ -1,11 +1,11 @@
 import { useReducer } from 'react'
 
-import appReducer from './appReducer.js'
-import authReducer from './authReducer.js'
-import userReducer from './userReducer.js'
+import { appReducer, app } from './appReducer.js'
+import { authReducer, auth } from './authReducer.js'
+import { userReducer, user } from './userReducer.js'
 
 
-const initState = {}
+const initState = { app, auth, user };
 
 const combineReducers = (...reducers) => (prevState, value) =>
     reducers.reduce((newState, reducer) => reducer(newState, value), prevState);

@@ -15,4 +15,4 @@ const userReducer = (prevState = initialUserState, action) => {
     }
 };
 
-export default userReducer
+export default { userReducer, user: initialUserState }

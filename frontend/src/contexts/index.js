@@ -1,10 +1,10 @@
-import React from 'react'
-/* import { useAppReducer } from './reducers/index.js';
+import React from 'react';
+import { useAppReducer } from './reducers/index.js';
 
-export const StoreContext = React.createContext()
+export const StoreContext = React.createContext();
 
 const StoreProvider = ({ children }) => {
-    const [ state, dispatch ] = useAppReducer();
+    const [state, dispatch] = useAppReducer();
 
     return (
         <StoreContext.Provider value={{ state, dispatch }}>
@@ -13,5 +13,4 @@ const StoreProvider = ({ children }) => {
     );
 };
 
-export default StoreProvider; */
-export const AuthContext = React.useContext();
+export default StoreProvider;

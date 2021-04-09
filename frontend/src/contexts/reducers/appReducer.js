@@ -8,12 +8,14 @@ const appReducer = (prevState = initialAppState, action) => {
         case '@@APP/CHANGE_LOADING':
             return {
                 ...prevState,
-                isLoading: action.payload,
+                isLoading: action.payload
             };
-            
         default:
             return prevState
     }
 };
 
-export default appReducer
+export default {
+    app: initialAppState,
+    appReducer
+}

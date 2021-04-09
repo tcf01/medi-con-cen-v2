@@ -1,21 +1,21 @@
 const initialLoginState = {
     userInfo: {
-        email: "",
+        email: ""
     }
-};      
-     
+};
+
 
 const authReducer = (prevState = initialLoginState, action) => {
     switch (action.type) {
         case '@AUTH/LOGIN':
             return {
                 ...prevState,
-                userInfo: action.payload,
+                userInfo: action.payload
             };
         case '@AUTH/LOGOUT':
             return {
                 ...prevState,
-                userInfo: null,
+                userInfo: null
             };
         /*case '@AUTH/REGISTER':
           return {
@@ -28,4 +28,4 @@ const authReducer = (prevState = initialLoginState, action) => {
     }
 };
 
-export default authReducer
+export default { authReducer, auth: initialLoginState }
