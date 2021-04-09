@@ -8,6 +8,7 @@ module.exports = {
     }
   },
   rules: {
+    "semi": "off",
     "quotes": ["off", "double"],
     "comma-dangle": ["error", "never"],
     "prettier/prettier": "off",
