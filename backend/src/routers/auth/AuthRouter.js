@@ -17,17 +17,14 @@ export class AuthRouter {
 
     login = async (req, res) => {
         try {
-            const user = await this.authService.getUserByEmail(req.body.user.email)
+            // const user = await this.authService.getUserByEmail(req.body.user.email)
+            const userInfo = await this.authService.authenticateEmailAndPw(req.body.user)
 
-            if (user[0]) {
-                const userInfo = await this.authService.authenticateEmailAndPw(req.body.user)
-
-                res.status(200).json({ userInfo: userInfo[0] })
+            if (userInfo.length > 0) {
+                res.json(userInfo[0])
             } else {
-                res.status(401).json({ msg: "Email or password is not correct" });
-                return;
+                res.json({ msg: "Email or password is not correct" });
             }
-
         } catch (e) {
             console.log(e)
 

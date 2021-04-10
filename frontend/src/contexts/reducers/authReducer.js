@@ -1,31 +1,36 @@
+import ACTION from "../../constants/dispatchActionType"
+
 const initialLoginState = {
     userInfo: {
+        id: "",
         email: ""
     }
 };
 
-
 const authReducer = (prevState = initialLoginState, action) => {
     switch (action.type) {
-        case '@AUTH/LOGIN':
+        case ACTION.LOGIN:
             return {
                 ...prevState,
-                userInfo: action.payload
+                auth: {
+                    ...prevState.auth,
+                    userInfo: action.payload
+                }
             };
-        case '@AUTH/LOGOUT':
+        case ACTION.LOGOUT:
             return {
                 ...prevState,
-                userInfo: null
+                auth: {
+                    ...prevState.auth,
+                    userInfo: null
+                }
             };
-        /*case '@AUTH/REGISTER':
-          return {
-                        ...prevState,
-                        userName: action.id,
-                        userToken: action.token,
-                    }; */
         default:
             return prevState
     }
 };
 
-export default { authReducer, auth: initialLoginState }
+module.exports = {
+    auth: initialLoginState,
+    authReducer
+}

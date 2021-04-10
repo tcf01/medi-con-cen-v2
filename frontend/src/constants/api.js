@@ -1,5 +1,5 @@
-const API = {
-    LOGIN: "/login",
-    REGISTER: "/register",
-    BOOKING_RECORD: "/record",
+export const APP_API_LIST = {
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    BOOKING_RECORD: "/user/record"
 }

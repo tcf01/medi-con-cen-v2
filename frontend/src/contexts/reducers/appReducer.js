@@ -1,21 +1,44 @@
+import ACTION  from "../../constants/dispatchActionType"
+
+
 const initialAppState = {
-    isLoading: true
+    isLoading: true,
+    error: ""
 };
 
 
 const appReducer = (prevState = initialAppState, action) => {
     switch (action.type) {
-        case '@@APP/CHANGE_LOADING':
+        case ACTION.SET_LOADING_FINISH:
             return {
                 ...prevState,
-                isLoading: action.payload
+                app: {
+                    ...prevState.app,
+                    isLoading: false
+                }
+            };
+        case ACTION.SET_LOADING:
+            return {
+                ...prevState,
+                app: {
+                    ...prevState.app,
+                    isLoading: true
+                }
+            };
+        case ACTION.SET_ERROR_MSG:
+            return {
+                ...prevState,
+                app: {
+                    ...prevState.app,
+                    error: action.payload
+                }
             };
         default:
             return prevState
     }
 };
 
-export default {
+module.exports = {
     app: initialAppState,
     appReducer
 }

@@ -1,18 +1,26 @@
+import ACTION  from "../../constants/dispatchActionType"
+
 const initialUserState = {
-    consultationRecord: {}
+    consultationRecord: []
 };
 
 
 const userReducer = (prevState = initialUserState, action) => {
     switch (action.type) {
-        case '@USER/RETRIEVE_RECORD':
+        case ACTION.RETRIEVE_RECORD:
             return {
                 ...prevState,
-                consultationRecord: action.payload,
+                user: {
+                    ...prevState.user,
+                    consultationRecord: action.payload
+                }
             };
         default:
             return prevState
     }
 };
 
-export default { userReducer, user: initialUserState }
+module.exports = {
+    user: initialUserState,
+    userReducer
+}
