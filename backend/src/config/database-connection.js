@@ -6,7 +6,6 @@ const dbInfo = {
     user: 'root',
     password: '123456',
     database: 'medi-con-cen',
-    debug: true
 }
 
 
