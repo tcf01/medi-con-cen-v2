@@ -8,19 +8,15 @@ export class UserService {
     }
 
     getConsultRecord = async (clinicName) => {
-        const sql = `SELECT * FROM ${TABLES.CONSULTATION_RECORDS} WHERE 'clinic_name' = ?`
-        const queryResult = operate(sql, clinicName, OPERATION_TYPE.RETRIEVE)
+        const sql = `SELECT * FROM ${TABLES.CONSULTATION_RECORDS} WHERE clinicName = ?`
+        const queryResult = await operate(sql, clinicName, OPERATION_TYPE.RETRIEVE)
 
-        if (queryResult.length > 0) {
-            return queryResult
-        } else {
-            throw new Error('No Record')
-        }
+        return queryResult
     }
 
     addConsultRecord = async (recordInfo) => {
         const expectedFields = ['clinic_name', 'doctor_name', 'patient-name', 'diagnosis', 'medication', 'consultation_fee', 'hasFollowUp', 'date', 'time']
-        const isMissingField = Object.entries(userInfo).filter(Boolean).length === expectedFields.length
+        const isMissingField = Object.entries(recordInfo).filter(Boolean).length === expectedFields.length
 
         if (isMissingField.length > 0) {
             throw new Error(`1 or more fields are missing`)

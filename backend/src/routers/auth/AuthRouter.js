@@ -17,8 +17,8 @@ export class AuthRouter {
 
     login = async (req, res) => {
         try {
-            // const user = await this.authService.getUserByEmail(req.body.user.email)
-            const userInfo = await this.authService.authenticateEmailAndPw(req.body.user)
+            const userInfo = await this.authService.authenticateEmailAndPw(req.body.loginInfo)
+            
 
             if (userInfo.length > 0) {
                 res.json(userInfo[0])
@@ -28,19 +28,19 @@ export class AuthRouter {
         } catch (e) {
             console.log(e)
 
-            res.status(500).json({ msg: e.toString() })
+            res.json({ msg: e.toString() })
         }
     }
 
     register = async (req, res) => {
         try {
-            const userInfo = await this.authService.addUser(req.body.userInfo)
+            const userInfo = await this.authService.addUser(req.body.registerInfo)
 
             res.status(200).json({ userInfo })
         } catch (e) {
             console.log(e)
 
-            res.status(500).json({ msg: e.toString() })
+            res.json({ msg: e.toString() })
         }
     }
 }

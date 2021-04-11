@@ -28,13 +28,13 @@ export class AuthService {
         return queryResult
     }
 
-    addUser = async (userInfo) => {
+    addUser = async (registerInfo) => {
         const expectedFields = ['email', 'password', 'clinic-name', 'phone', 'address']
         const insertUserSql = `INSERT INTO ${TABLES.USERS} SET ?`
 
 
-        const isMissingField = Object.entries(userInfo).filter(Boolean).length === expectedFields.length
-        const userEmailExists = await this.getUserByEmail(userInfo.email)
+        const isMissingField = Object.entries(registerInfo).filter(Boolean).length === expectedFields.length
+        const userEmailExists = await this.getUserByEmail(registerInfo.email)
 
 
         if (userEmailExists.length > 0) {
@@ -44,7 +44,7 @@ export class AuthService {
         }
 
 
-        const queryResult = operate(insertUserSql, userInfo, OPERATION_TYPE.CREATE)
+        const queryResult = operate(insertUserSql, registerInfo, OPERATION_TYPE.CREATE)
 
         return queryResult
     }

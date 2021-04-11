@@ -19,11 +19,15 @@ export class UserRouter {
             const { clinicName } = req.query;
             const queryResult = await this.userService.getConsultRecord(clinicName)
 
-            res.status(200).json({ data: queryResult })
+            if (queryResult.length > 0) {
+                res.json({ data: queryResult })
+            } else {
+                res.json({ msg: "No Record" })
+            }
         } catch (e) {
             console.log(e)
 
-            res.status(500).json({ msg: e.toString() })
+            res.json({ msg: e.toString() })
         }
     }
 
@@ -32,11 +36,11 @@ export class UserRouter {
             const { recordInfo } = req.body
             const queryResult = await this.userService.addConsultRecord(recordInfo)
 
-            res.status(200).json({ data: queryResult })
+            res.json({ data: queryResult })
         } catch (error) {
             console.log(error)
 
-            res.status(500).json(error.message)
+            res.json({ msg: error.message })
         }
     }
 }
