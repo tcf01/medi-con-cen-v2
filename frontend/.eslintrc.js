@@ -10,7 +10,7 @@ module.exports = {
   rules: {
     "semi": "off",
     "quotes": ["off", "double"],
-    "comma-dangle": ["error", "never"],
+    "comma-dangle": ["warning", "never"],
     "prettier/prettier": "off",
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
