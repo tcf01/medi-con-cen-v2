@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     View,
     TouchableOpacity,
@@ -9,16 +9,107 @@ import {
     ScrollView,
     StatusBar
 } from 'react-native';
-import Animatable from 'react-native-animatable';
+import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather'
+
+import FormField from '../../components/molecules/form/FormFields.js';
+import { GlobalContext } from '../../contexts/index.js';
+import { callApi } from '../../utils/api.js';
+import { APP_API_LIST } from '../../constants/api.js';
+import ACTION from '../../constants/dispatchActionType';
 
 
-const RegisterScreen = () => {
+const registerFormFields = [
+    {
+        showName: 'Email',
+        fieldName: 'email',
+        placeHolder: 'Enter here',
+        type: 'text',
+        // onChangeHandler: (val) => { setFormValues({ ...formValues, email: val }) },
+        iconInfo: {
+            name: "user-o",
+            color: "#05357a",
+            size: 20
+        }
+    },
+    {
+        showName: 'Password',
+        fieldName: "password",
+        placeHolder: 'Enter here',
+        type: 'password',
+        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
+        iconInfo: {
+            name: "user-o",
+            color: "#05357a",
+            size: 20
+        }
+    },
+    {
+        showName: 'Clinic Name',
+        fieldName: "clinicName",
+        placeHolder: 'Enter here',
+        type: 'text',
+        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
+        iconInfo: {
+            name: "user-o",
+            color: "#05357a",
+            size: 20
+        }
+    },
+    {
+        showName: 'Phone Number',
+        fieldName: "phone",
+        placeHolder: 'Enter here',
+        type: 'text',
+        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
+        iconInfo: {
+            name: "user-o",
+            color: "#05357a",
+            size: 20
+        }
+    },
+    {
+        showName: 'Address',
+        fieldName: "address",
+        placeHolder: 'Enter here',
+        type: 'text',
+        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
+        iconInfo: {
+            name: "user-o",
+            color: "#05357a",
+            size: 20
+        }
+    }
+]
+
+const RegisterScreen = ({ navigation }) => {
+    const { globalState, globalDispatch } = React.useContext(GlobalContext);
+    const [formValues, setFormValues] = useState(genFormFieldNames(registerFormFields))
+
+    const onChange = useCallback((val, fieldName) => {
+        setFormValues({ ...formValues, [fieldName]: val })
+    }, [formValues])
+
+    const handleRegister = async () => {
+        try {
+            const { data } = await callApi('post', APP_API_LIST.REGISTER, { registerInfo: formValues })
+            const { msg } = data
+
+            if (!msg) {
+                // globalDispatch({ type: ACTION.LOGIN, payload: { id, email } })
+                alert('Register Successful');
+                navigation.navigate('HomeScreen')
+            } else {
+                globalDispatch({ type: ACTION.SET_ERROR_MSG, payload: msg },)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Register Now!</Text>
             </View>
@@ -27,36 +118,19 @@ const RegisterScreen = () => {
                 style={styles.footer}
             >
                 <ScrollView>
-                    <Text style={styles.text_footer}>Username</Text>
-                    <View style={styles.action}>
-                        <FontAwesome
-                            name="user-o"
-                            color="#05375a"
-                            size={20}
-                        />
-                        <TextInput
-                            placeholder="Your Username"
-                            style={styles.textInput}
-                            autoCapitalize="none"
-                            onChangeText={(val) => textInputChange(val)}
-                        />
-                        {data.check_textInputChange ?
-                            <Animatable.View
-                                animation="bounceIn"
-                            >
-                                <Feather
-                                    name="check-circle"
-                                    color="green"
-                                    size={20}
-                                />
-                            </Animatable.View>
-                            : null}
-                    </View>
-
-                    <Text style={[styles.text_footer, {
-                        marginTop: 35
-                    }]}>Password</Text>
-                    <View style={styles.action}>
+                    {registerFormFields.map((formField, i) => {
+                        return (
+                            <FormField key={`form-field-${formField.fieldName}-${i}`}
+                                onChangeHandler={onChange}
+                                formValues={formValues}
+                                type={formField.type}
+                                fieldName={formField.fieldName}
+                                {...formField}
+                            />
+                        )
+                    })}
+                    {/* <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text> */}
+                    {/* <View style={styles.action}>
                         <Feather
                             name="lock"
                             color="#05375a"
@@ -64,7 +138,7 @@ const RegisterScreen = () => {
                         />
                         <TextInput
                             placeholder="Your Password"
-                            secureTextEntry={data.secureTextEntry ? true : false}
+                            secureTextEntry={true}
                             style={styles.textInput}
                             autoCapitalize="none"
                             onChangeText={(val) => handlePasswordChange(val)}
@@ -72,7 +146,7 @@ const RegisterScreen = () => {
                         <TouchableOpacity
                             onPress={updateSecureTextEntry}
                         >
-                            {data.secureTextEntry ?
+                            {false ?
                                 <Feather
                                     name="eye-off"
                                     color="grey"
@@ -86,79 +160,23 @@ const RegisterScreen = () => {
                                 />
                             }
                         </TouchableOpacity>
-                    </View>
-
-                    <Text style={[styles.text_footer, {
-                        marginTop: 35
-                    }]}>Confirm Password</Text>
-                    <View style={styles.action}>
-                        <Feather
-                            name="lock"
-                            color="#05375a"
-                            size={20}
-                        />
-                        <TextInput
-                            placeholder="Confirm Your Password"
-                            secureTextEntry={data.confirm_secureTextEntry ? true : false}
-                            style={styles.textInput}
-                            autoCapitalize="none"
-                            onChangeText={(val) => handleConfirmPasswordChange(val)}
-                        />
-                        <TouchableOpacity
-                            onPress={updateConfirmSecureTextEntry}
-                        >
-                            {data.secureTextEntry ?
-                                <Feather
-                                    name="eye-off"
-                                    color="grey"
-                                    size={20}
-                                />
-                                :
-                                <Feather
-                                    name="eye"
-                                    color="grey"
-                                    size={20}
-                                />
-                            }
-                        </TouchableOpacity>
-                    </View>
-                   {/*  <View style={styles.textPrivate}>
-                        <Text style={styles.color_textPrivate}>
-                            By signing up you agree to our
-                        </Text>
-                        <Text style={[styles.color_textPrivate, { fontWeight: 'bold' }]}>{" "}Terms of service</Text>
-                        <Text style={styles.color_textPrivate}>{" "}and</Text>
-                        <Text style={[styles.color_textPrivate, { fontWeight: 'bold' }]}>{" "}Privacy policy</Text>
                     </View> */}
-                    <View style={styles.button}>
-                        <TouchableOpacity
+                </ScrollView>
+                <View style={styles.button}>
+                    <TouchableOpacity
+                        style={styles.signIn}
+                        onPress={handleRegister}
+                    >
+                        <LinearGradient
+                            colors={['#08d4c4', '#01ab9d']}
                             style={styles.signIn}
-                            onPress={() => { }}
-                        >
-                            <LinearGradient
-                                colors={['#08d4c4', '#01ab9d']}
-                                style={styles.signIn}
-                            >
-                                <Text style={[styles.textSign, {
-                                    color: '#fff'
-                                }]}>Register</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => navigation.goBack()}
-                            style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
-                                marginTop: 15
-                            }]}
                         >
                             <Text style={[styles.textSign, {
-                                color: '#009387'
-                            }]}>Sign In</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
+                                color: '#fff'
+                            }]}>Register</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
             </Animatable.View>
         </View>
     );
@@ -204,7 +222,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
-        color: '#05375a',
+        color: '#05375a'
     },
     button: {
         alignItems: 'center',
@@ -220,15 +238,15 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
-    },
-    textPrivate: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginTop: 20
-    },
-    color_textPrivate: {
-        color: 'grey'
     }
+    /*  textPrivate: {
+         flexDirection: 'row',
+         flexWrap: 'wrap',
+         marginTop: 20
+     },
+     color_textPrivate: {
+         color: 'grey'
+     } */
 });
 
 
