@@ -1,11 +1,10 @@
-import ACTION  from "../../constants/dispatchActionType"
-
+import ACTION from "../../constants/dispatchActionType"
 
 const initialAppState = {
     isLoading: true,
+    isModalOpen: false,
     error: ""
 };
-
 
 const appReducer = (prevState = initialAppState, action) => {
     switch (action.type) {
@@ -23,6 +22,22 @@ const appReducer = (prevState = initialAppState, action) => {
                 app: {
                     ...prevState.app,
                     isLoading: true
+                }
+            };
+        case ACTION.SET_MODAL_OPEN:
+            return {
+                ...prevState,
+                app: {
+                    ...prevState.app,
+                    isModalOpen: true
+                }
+            };
+        case ACTION.SET_MODAL_CLOSE:
+            return {
+                ...prevState,
+                app: {
+                    ...prevState.app,
+                    isModalOpen: false
                 }
             };
         case ACTION.SET_ERROR_MSG:

@@ -1,9 +1,11 @@
 import ACTION from "../../constants/dispatchActionType"
 
 const initialLoginState = {
+    isLogin: false,
     userInfo: {
         id: "",
-        email: ""
+        email: "",
+        clinicName: ""
     }
 };
 
@@ -14,6 +16,7 @@ const authReducer = (prevState = initialLoginState, action) => {
                 ...prevState,
                 auth: {
                     ...prevState.auth,
+                    isLogin: true, 
                     userInfo: action.payload
                 }
             };
@@ -22,7 +25,8 @@ const authReducer = (prevState = initialLoginState, action) => {
                 ...prevState,
                 auth: {
                     ...prevState.auth,
-                    userInfo: null
+                    isLogin: false,
+                    userInfo: {}
                 }
             };
         default:
