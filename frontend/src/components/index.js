@@ -1,18 +1,23 @@
 import React from 'react'
-import { StoreContext } from '../contexts/index';
-
-import RootStackScreen from '../screens/index';
 import { NavigationContainer } from '@react-navigation/native';
 
+import RootStackScreen from '../screens';
+import HomeScreen from '../screens/home';
+import { GlobalContext } from '../contexts/index';
+
+
 const Components = () => {
-    const { state: globalState, dispatch: globalDispatch } = React.useContext(StoreContext);
-    console.log(globalState, globalDispatch)
+    const { globalState } = React.useContext(GlobalContext);
 
     return (
         <NavigationContainer>
-            <RootStackScreen />
+            {globalState.auth.isLogin
+                ? <HomeScreen />
+                : <RootStackScreen />
+            }
         </NavigationContainer>
     )
 }
 
 export default Components
+

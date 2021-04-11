@@ -8,9 +8,6 @@ export const Form = ({ formFields, buttonText, handleOnSubmit, children, ...prop
         <View style={styles.formFieldWrapper}>
             <View style={styles.formFieldWrapper} >
                 {children}
-                {/* {formFields.map(formField => (
-                    <FormField key={`form-field-${formField.fieldName}`} type={formField.type} fieldName={formField.fieldName} {...props} />)
-                )} */}
             </View>
         </View>
     )
