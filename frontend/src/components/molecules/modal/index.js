@@ -6,7 +6,7 @@ import ModalBody from './Body'
 
 export const GeneralModal = ({ title, children, isOpen }) => {
     return (
-        <View /* style={styles.testing} */>
+        <View >
             <Modal visible={isOpen}>
                 <View style={styles.modalBg}>
                     <View style={styles.modalContentWrapper}>
