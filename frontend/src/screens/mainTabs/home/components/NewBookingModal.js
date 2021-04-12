@@ -185,7 +185,7 @@ const NewBookingModal = ({ title, isOpen }) => {
             <GeneralButton title={"Add"}
                 onPressHandler={handleAddRecord}
                 isDisable={isButtonDisable}
-                buttonCustomStyle={styles.signIn}
+                buttonWrapperStyle={styles.signIn}
             />
         </GeneralModal>
     )

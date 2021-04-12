@@ -44,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.homepageHeaderText}>Consultation Record</Text>
         <GeneralButton title={'Add Record'}
           onPressHandler={openModal}
-          buttonCustomStyle={styles.addRecordButton}
+          buttonWrapperStyle={styles.addRecordButton}
         />
       </View>
 
