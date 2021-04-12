@@ -5,11 +5,11 @@ import { ThemeContext } from '../../styles';
 
 export const GeneralButton = ({ title, onPressHandler, isDisable, ...props }) => {
     const { commonLayout } = React.useContext(ThemeContext)
-    const { buttonCustomStyle, textCustomStyle } = props
+    const { buttonWrapperStyle, textCustomStyle } = props
 
     return (
         <TouchableOpacity
-            style={[commonLayout.button, buttonCustomStyle ? buttonCustomStyle : null, isDisable && styles.appButtonDisabled
+            style={[commonLayout.button, buttonWrapperStyle ? buttonWrapperStyle : null, isDisable && styles.appButtonDisabled
             ].filter(Boolean)}
             disabled={isDisable}
             onPress={onPressHandler}
