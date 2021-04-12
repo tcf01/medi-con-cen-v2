@@ -20,9 +20,9 @@ export class UserRouter {
             const queryResult = await this.userService.getConsultRecord(clinicName)
 
             if (queryResult.length > 0) {
-                res.json({ data: queryResult })
+                res.json({ data: queryResult, msg: null })
             } else {
-                res.json({ msg: "No Record" })
+                res.json({ data: null, msg: "No Record" })
             }
         } catch (e) {
             console.log(e)
