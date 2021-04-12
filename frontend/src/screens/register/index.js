@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     View,
     TouchableOpacity,
-    TextInput,
     Text,
     Platform,
     StyleSheet,
@@ -10,13 +9,13 @@ import {
     StatusBar
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
-
 import FormField from '../../components/molecules/form/FormFields.js';
 import { GlobalContext } from '../../contexts/index.js';
 import { callApi } from '../../utils/api.js';
 import { APP_API_LIST } from '../../constants/api.js';
 import ACTION from '../../constants/dispatchActionType';
+import { genFormFieldNames } from '../../utils/commonFunction.js';
+import { ThemeContext } from '../../styles/index.js';
 
 
 const registerFormFields = [
@@ -25,10 +24,9 @@ const registerFormFields = [
         fieldName: 'email',
         placeHolder: 'Enter here',
         type: 'text',
-        // onChangeHandler: (val) => { setFormValues({ ...formValues, email: val }) },
         iconInfo: {
-            name: "user-o",
-            color: "#05357a",
+            name: "envelope-open",
+            color: "white",
             size: 20
         }
     },
@@ -37,22 +35,20 @@ const registerFormFields = [
         fieldName: "password",
         placeHolder: 'Enter here',
         type: 'password',
-        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
         iconInfo: {
-            name: "user-o",
-            color: "#05357a",
+            name: "lock",
+            color: "white",
             size: 20
         }
     },
     {
-        showName: 'Clinic Name',
+        showName: 'Clinic',
         fieldName: "clinicName",
-        placeHolder: 'Enter here',
+        placeHolder: '',
         type: 'text',
-        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
         iconInfo: {
-            name: "user-o",
-            color: "#05357a",
+            name: "hospital-o",
+            color: "white",
             size: 20
         }
     },
@@ -61,10 +57,9 @@ const registerFormFields = [
         fieldName: "phone",
         placeHolder: 'Enter here',
         type: 'text',
-        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
         iconInfo: {
-            name: "user-o",
-            color: "#05357a",
+            name: "phone",
+            color: "white",
             size: 20
         }
     },
@@ -73,17 +68,18 @@ const registerFormFields = [
         fieldName: "address",
         placeHolder: 'Enter here',
         type: 'text',
-        // onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
         iconInfo: {
-            name: "user-o",
-            color: "#05357a",
+            name: "address-book",
+            color: "white",
             size: 20
         }
     }
 ]
 
+
 const RegisterScreen = ({ navigation }) => {
-    const { globalState, globalDispatch } = React.useContext(GlobalContext);
+    const { color } = React.useContext(ThemeContext);
+    const { _, globalDispatch } = React.useContext(GlobalContext);
     const [formValues, setFormValues] = useState(genFormFieldNames(registerFormFields))
 
     const onChange = useCallback((val, fieldName) => {
@@ -96,7 +92,6 @@ const RegisterScreen = ({ navigation }) => {
             const { msg } = data
 
             if (!msg) {
-                // globalDispatch({ type: ACTION.LOGIN, payload: { id, email } })
                 alert('Register Successful');
                 navigation.navigate('HomeScreen')
             } else {
@@ -108,14 +103,14 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: color.primaryButtonBg }]}>
             <StatusBar barStyle="light-content" />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Register Now!</Text>
+                <Text style={[styles.textHeader, color.primaryTextColor]}>Register Now!</Text>
             </View>
             <Animatable.View
                 animation="fadeInUpBig"
-                style={styles.footer}
+                style={[styles.footer, { backgroundColor: color.secondButtonBg }]}
             >
                 <ScrollView>
                     {registerFormFields.map((formField, i) => {
@@ -123,58 +118,23 @@ const RegisterScreen = ({ navigation }) => {
                             <FormField key={`form-field-${formField.fieldName}-${i}`}
                                 onChangeHandler={onChange}
                                 formValues={formValues}
+                                customTextStyle={{ color: "black" }}
+                                customTitleStyle={{ color: "white" }}
                                 type={formField.type}
                                 fieldName={formField.fieldName}
                                 {...formField}
                             />
                         )
                     })}
-                    {/* <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text> */}
-                    {/* <View style={styles.action}>
-                        <Feather
-                            name="lock"
-                            color="#05375a"
-                            size={20}
-                        />
-                        <TextInput
-                            placeholder="Your Password"
-                            secureTextEntry={true}
-                            style={styles.textInput}
-                            autoCapitalize="none"
-                            onChangeText={(val) => handlePasswordChange(val)}
-                        />
-                        <TouchableOpacity
-                            onPress={updateSecureTextEntry}
-                        >
-                            {false ?
-                                <Feather
-                                    name="eye-off"
-                                    color="grey"
-                                    size={20}
-                                />
-                                :
-                                <Feather
-                                    name="eye"
-                                    color="grey"
-                                    size={20}
-                                />
-                            }
-                        </TouchableOpacity>
-                    </View> */}
                 </ScrollView>
                 <View style={styles.button}>
                     <TouchableOpacity
-                        style={styles.signIn}
+                        style={[styles.signIn, { backgroundColor: color.primaryButtonBg }]}
                         onPress={handleRegister}
                     >
-                        <LinearGradient
-                            colors={['#08d4c4', '#01ab9d']}
-                            style={styles.signIn}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff'
-                            }]}>Register</Text>
-                        </LinearGradient>
+                        <View>
+                            <Text style={[styles.textSign]}>Register</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
             </Animatable.View>
@@ -186,7 +146,6 @@ const RegisterScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387'
     },
     header: {
         flex: 1,
@@ -196,18 +155,16 @@ const styles = StyleSheet.create({
     },
     footer: {
         flex: Platform.OS === 'ios' ? 3 : 5,
-        backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingVertical: 30
     },
-    text_header: {
-        color: '#fff',
+    textHeader: {
         fontWeight: 'bold',
         fontSize: 30
     },
-    text_footer: {
+    textFooter: {
         color: '#05375a',
         fontSize: 18
     },
@@ -239,14 +196,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     }
-    /*  textPrivate: {
-         flexDirection: 'row',
-         flexWrap: 'wrap',
-         marginTop: 20
-     },
-     color_textPrivate: {
-         color: 'grey'
-     } */
 });
 
 

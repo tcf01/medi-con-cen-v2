@@ -1,15 +1,14 @@
 import React, { useState, useCallback } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Picker } from '@react-native-community/picker';
 
 import { GeneralButton } from '../../../../components/atoms/Button';
 import FormField from '../../../../components/molecules/form/FormFields';
 import { GeneralModal } from '../../../../components/molecules/modal';
-import { APP_API_LIST } from '../../../../constants/api';
 import ACTION from '../../../../constants/dispatchActionType';
 import { GlobalContext } from '../../../../contexts';
-import { callApi } from '../../../../utils/api';
 import { genFormFieldNames } from '../../../../utils/commonFunction';
+import { addNewRecord, fetchConsultationRecord } from '../api';
 
 
 const bookingInfoFields = [
@@ -19,7 +18,7 @@ const bookingInfoFields = [
         placeHolder: 'Enter here',
         type: 'text',
         iconInfo: {
-            name: "user-o",
+            name: "hospital-o",
             color: "#05357a",
             size: 20
         }
@@ -63,7 +62,7 @@ const bookingInfoFields = [
         placeHolder: 'Enter here',
         type: 'text',
         iconInfo: {
-            name: "user-o",
+            name: "tablet",
             color: "#05357a",
             size: 20
         }
@@ -74,7 +73,7 @@ const bookingInfoFields = [
         placeHolder: 'Enter here',
         type: 'text',
         iconInfo: {
-            name: "user-o",
+            name: "money",
             color: "#05357a",
             size: 20
         }
@@ -85,7 +84,7 @@ const bookingInfoFields = [
         placeHolder: 'Enter here',
         type: 'text',
         iconInfo: {
-            name: "user-o",
+            name: "calendar",
             color: "#05357a",
             size: 20
         }
@@ -96,7 +95,7 @@ const bookingInfoFields = [
         placeHolder: 'Enter here',
         type: 'text',
         iconInfo: {
-            name: "user-o",
+            name: "mixcloud",
             color: "#05357a",
             size: 20
         }
@@ -106,11 +105,12 @@ const bookingInfoFields = [
         fieldName: 'hasFollowUp',
         placeHolder: 'Enter here',
         type: 'text',
-        iconInfo: {
-            name: "user-o",
-            color: "#05357a",
-            size: 20
-        }
+        initialValue: true,
+        // iconInfo: {
+        //     name: "mixcloud",
+        //     color: "#05357a",
+        //     size: 20
+        // }
     },
 ]
 
@@ -123,16 +123,22 @@ const NewBookingModal = ({ title, isOpen }) => {
     }, [formValues])
 
     const handleAddRecord = async () => {
-        debugger
+        const { auth: { userInfo: { clinicName } } } = globalState;
+
         try {
-            const { data } = await callApi('post', APP_API_LIST.BOOKING_RECORD, { recordInfo: formValues })
-            const { msg } = data
+            const { msg: errorMsg1 } = await addNewRecord(formValues)
+            const { records, msg: errorMsg2, recordsLength } = await fetchConsultationRecord(clinicName)
 
-            if (!msg) {
-                // globalDispatch({ type: ACTION.LOGIN, payload: { id, email } })
-                // navigation.navigate('HomeScreen')
+
+            if (!errorMsg1 || !errorMsg2) {
+                globalDispatch({
+                    type: ACTION.SET_CONSULTATION_RECORD, payload: {
+                        records,
+                        length: recordsLength
+                    }
+                })
                 globalDispatch({ type: ACTION.SET_MODAL_CLOSE })
-
+                setFormValues(genFormFieldNames(bookingInfoFields))
             } else {
                 globalDispatch({ type: ACTION.SET_ERROR_MSG, payload: msg })
             }
@@ -186,7 +192,6 @@ const NewBookingModal = ({ title, isOpen }) => {
 }
 
 const styles = StyleSheet.create({
-
 })
 
 export default NewBookingModal;

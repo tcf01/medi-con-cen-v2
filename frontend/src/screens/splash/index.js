@@ -37,7 +37,7 @@ const SplashScreen = ({ navigation }) => {
             type: 'password',
             onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
             iconInfo: {
-                name: "user-o",
+                name: "lock",
                 color: "#05357a",
                 size: 20
             }
@@ -80,7 +80,11 @@ const SplashScreen = ({ navigation }) => {
                     </View>
                     <GeneralButton title={'Login'} onPressHandler={handleLogin} />
                 </LoginForm>
-                <GeneralButton title={'Register'} onPressHandler={handleRegister} buttonCustomStyle={{ backgroundColor: color.primaryButtonBg, color: color.primaryTextColor }} />
+                <GeneralButton
+                    title={'Register'}
+                    onPressHandler={handleRegister}
+                    textCustomStyle={{ color: color.primaryTextColor }}
+                    buttonWrapperStyle={{ backgroundColor: color.primaryButtonBg }} />
             </View>
         </SafeAreaView>
     );
@@ -113,7 +117,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     innerContentText: {
-        fontSize: 25
+        fontSize: 25,
+        marginBottom: 100
     },
     loginFormWrapper: {
         // width: "80%"

@@ -34,19 +34,8 @@ const DrawerContent = (props) => {
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>Testing</Title>
-                                <Caption style={styles.caption}>{globalState.auth.email}</Caption>
-                            </View>
-                        </View>
-
-                        <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
-                                <Caption style={styles.caption}>Following</Caption>
-                            </View>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
-                                <Caption style={styles.caption}>Followers</Caption>
+                                <Title style={styles.title}> (Username) </Title>
+                                <Caption style={styles.caption}>{globalState.auth.userInfo.email}</Caption>
                             </View>
                         </View>
                     </View>
