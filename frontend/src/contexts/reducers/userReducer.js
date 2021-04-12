@@ -1,7 +1,10 @@
-import ACTION  from "../../constants/dispatchActionType"
+import ACTION from "../../constants/dispatchActionType"
 
 const initialUserState = {
-    consultationRecords: []
+    consultationRecords: {
+        data: [],
+        length: 0
+    }
 };
 
 
@@ -12,7 +15,10 @@ const userReducer = (prevState = initialUserState, action) => {
                 ...prevState,
                 user: {
                     ...prevState.user,
-                    consultationRecords: action.payload
+                    consultationRecords: {
+                        data: action.payload.records,
+                        recordsLength: action.payload.length
+                    }
                 }
             };
         default:

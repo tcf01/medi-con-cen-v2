@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
 
 import Record from './components/Record';
@@ -10,7 +10,7 @@ import { GeneralButton } from '../../../components/atoms/Button'
 
 const HomeScreen = ({ navigation }) => {
   const { globalState, globalDispatch } = React.useContext(GlobalContext)
-  const { auth: { userInfo: { clinicName } }, user: { consultationRecords } } = globalState
+  const { auth: { userInfo: { clinicName } }, user: { consultationRecords: { data: records } } } = globalState
 
 
   const openModal = () => {
@@ -18,19 +18,24 @@ const HomeScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    
     fetchConsultationRecord(clinicName)
-    .then(res => {
-      const { data, msg } = res
+      .then(res => {
+        const { records, msg, recordsLength: newRecordsLength } = res
 
-        console.log("what is the data", data)
-
-        if (!msg) {
-          globalDispatch({ type: ACTION.SET_CONSULTATION_RECORD, payload: data })
-        } else {
-          globalDispatch({ type: ACTION.SET_ERROR_MSG, payload: msg })
+        if (globalState.user.consultationRecords.length !== newRecordsLength) {
+          if (!msg) {
+            globalDispatch({
+              type: ACTION.SET_CONSULTATION_RECORD, payload:
+              {
+                records,
+                length: records.length
+              }
+            })
+          } else {
+            globalDispatch({ type: ACTION.SET_ERROR_MSG, payload: msg })
+          }
         }
-      })
+      }, [globalState.user.consultationRecords.length])
   }, [])
 
   return (
@@ -44,8 +49,8 @@ const HomeScreen = ({ navigation }) => {
       </View>
 
       <ScrollView style={styles.recordWrapper}>
-        {consultationRecords.length > 0
-          ? consultationRecords.map(record => {
+        {records.length > 0
+          ? records.map(record => {
             return <Record key={`record-${record.id}`} {...record} />
           })
           :
@@ -55,8 +60,10 @@ const HomeScreen = ({ navigation }) => {
 
       <NewBookingModal title={"Add Record"} isOpen={globalState.app.isModalOpen} />
     </View>
-  );
-};
+  )
+}
+
+
 
 const styles = StyleSheet.create({
   container: {
