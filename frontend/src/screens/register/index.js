@@ -6,7 +6,7 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
-    StatusBar
+    StatusBar,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FormField from '../../components/molecules/form/FormFields.js';
@@ -18,11 +18,13 @@ import { genFormFieldNames } from '../../utils/commonFunction.js';
 import { ThemeContext } from '../../styles/index.js';
 
 
+
 const registerFormFields = [
     {
         showName: 'Email',
         fieldName: 'email',
         placeHolder: 'Enter here',
+        validateType: "email",
         type: 'text',
         iconInfo: {
             name: "envelope-open",
@@ -33,7 +35,6 @@ const registerFormFields = [
     {
         showName: 'Password',
         fieldName: "password",
-        placeHolder: 'Enter here',
         type: 'password',
         iconInfo: {
             name: "lock",
@@ -44,7 +45,6 @@ const registerFormFields = [
     {
         showName: 'Clinic',
         fieldName: "clinicName",
-        placeHolder: '',
         type: 'text',
         iconInfo: {
             name: "hospital-o",
@@ -56,6 +56,8 @@ const registerFormFields = [
         showName: 'Phone Number',
         fieldName: "phone",
         placeHolder: 'Enter here',
+        validateType: "number",
+        keyboardType: 'numeric',
         type: 'text',
         iconInfo: {
             name: "phone",
@@ -81,13 +83,26 @@ const RegisterScreen = ({ navigation }) => {
     const { color } = React.useContext(ThemeContext);
     const { _, globalDispatch } = React.useContext(GlobalContext);
     const [formValues, setFormValues] = useState(genFormFieldNames(registerFormFields))
+    const [errors, setErrors] = useState(genFormFieldNames(registerFormFields, true))
 
     const onChange = useCallback((val, fieldName) => {
         setFormValues({ ...formValues, [fieldName]: val })
     }, [formValues])
 
+    const handleSetErrorMsg = (errorMsg, fieldName) => {
+        setErrors({ ...errors, [fieldName]: errorMsg })
+    }
+
+
     const handleRegister = async () => {
         try {
+            const hasErrors = Object.values(errors).filter(error => error !== "").length > 0
+
+            if (hasErrors) {
+                alert("1 or more fields has error, please solve that")
+                return
+            }
+
             const { data } = await callApi('post', APP_API_LIST.REGISTER, { registerInfo: formValues })
             const { msg } = data
 
@@ -116,12 +131,11 @@ const RegisterScreen = ({ navigation }) => {
                     {registerFormFields.map((formField, i) => {
                         return (
                             <FormField key={`form-field-${formField.fieldName}-${i}`}
-                                onChangeHandler={onChange}
                                 formValues={formValues}
+                                onChangeHandler={onChange}
+                                errorHandler={handleSetErrorMsg}
                                 customTextStyle={{ color: "black" }}
                                 customTitleStyle={{ color: "white" }}
-                                type={formField.type}
-                                fieldName={formField.fieldName}
                                 {...formField}
                             />
                         )

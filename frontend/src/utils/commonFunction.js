@@ -1,7 +1,7 @@
-export const genFormFieldNames = (formFields) => {
+export const genFormFieldNames = (formFields, initAllToEmptyString = false) => {
     const result = formFields.reduce((fieldObj, field) => {
         const { fieldName, initialValue } = field;
-        fieldObj[fieldName] = initialValue ? initialValue : ""
+        fieldObj[fieldName] = initialValue && !initAllToEmptyString ? initialValue : ""
 
         return fieldObj
     }, {})

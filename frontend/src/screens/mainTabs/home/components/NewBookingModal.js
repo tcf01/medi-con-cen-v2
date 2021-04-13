@@ -71,6 +71,7 @@ const bookingInfoFields = [
         showName: 'Consultation fee',
         fieldName: 'consultationFee',
         placeHolder: 'Enter here',
+        validateType: "number",
         type: 'text',
         iconInfo: {
             name: "money",
@@ -106,26 +107,33 @@ const bookingInfoFields = [
         placeHolder: 'Enter here',
         type: 'text',
         initialValue: true,
-        // iconInfo: {
-        //     name: "mixcloud",
-        //     color: "#05357a",
-        //     size: 20
-        // }
     },
 ]
 
 const NewBookingModal = ({ title, isOpen }) => {
     const { globalState, globalDispatch } = React.useContext(GlobalContext)
     const [formValues, setFormValues] = useState(genFormFieldNames(bookingInfoFields))
+    const [errors, setErrors] = useState(genFormFieldNames(bookingInfoFields, true))
 
     const onChange = useCallback((val, fieldName) => {
         setFormValues({ ...formValues, [fieldName]: val })
     }, [formValues])
 
+    const handleSetErrorMsg = (errorMsg, fieldName) => {
+        setErrors({ ...errors, [fieldName]: errorMsg })
+    }
+
     const handleAddRecord = async () => {
         const { auth: { userInfo: { clinicName } } } = globalState;
 
         try {
+            const hasErrors = Object.values(errors).filter(error => error !== "").length > 0
+
+            if (hasErrors) {
+                alert("1 or more fields has error, please solve that")
+                return
+            }
+
             const { msg: errorMsg1 } = await addNewRecord(formValues)
             const { records, msg: errorMsg2, recordsLength } = await fetchConsultationRecord(clinicName)
 
@@ -158,8 +166,9 @@ const NewBookingModal = ({ title, isOpen }) => {
                         <FormField
                             key={`form-field-${formField.fieldName}-${i}`}
                             onChangeHandler={onChange}
-                            formValues={formValues}
+                            errorHandler={handleSetErrorMsg}
                             type={formField.type}
+                            formValues={formValues}
                             fieldName={formField.fieldName}
                             {...formField}
                         />

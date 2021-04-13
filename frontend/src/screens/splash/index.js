@@ -9,44 +9,60 @@ import { GlobalContext } from '../../contexts/index.js';
 import ACTION from '../../constants/dispatchActionType';
 import { GeneralButton } from '../../components/atoms/Button.js';
 import { ThemeContext } from '../../styles/index.js';
+import { genFormFieldNames } from '../../utils/commonFunction.js';
+
+
+const loginFormFields = [
+    {
+        showName: 'Email',
+        fieldName: 'email',
+        validateType: "email",
+        type: 'text',
+        iconInfo: {
+            name: "user-o",
+            color: "#05357a",
+            size: 20
+        }
+    },
+    {
+        showName: 'Password',
+        fieldName: "password",
+        placeHolder: 'Enter here',
+        type: 'password',
+        iconInfo: {
+            name: "lock",
+            color: "#05357a",
+            size: 20
+        }
+    }
+]
 
 
 const SplashScreen = ({ navigation }) => {
+   
     const { globalState, globalDispatch } = React.useContext(GlobalContext);
     const { color } = React.useContext(ThemeContext);
-    const [formValues, setFormValues] = useState({ email: "", password: "" })
-    const loginFormFields = useMemo(() => ([
-        {
-            showName: 'Email',
-            fieldName: 'email',
-            placeHolder: 'Enter here',
-            type: 'text',
-            onChangeHandler: (val) => {
-                setFormValues({ ...formValues, email: val })
-            },
-            iconInfo: {
-                name: "user-o",
-                color: "#05357a",
-                size: 20
-            }
-        },
-        {
-            showName: 'Password',
-            fieldName: "password",
-            placeHolder: 'Enter here',
-            type: 'password',
-            onChangeHandler: (val) => { setFormValues({ ...formValues, password: val }) },
-            iconInfo: {
-                name: "lock",
-                color: "#05357a",
-                size: 20
-            }
-        }
-    ]), [formValues]);
+    const [formValues, setFormValues] = useState(genFormFieldNames(loginFormFields, true))
+    const [errors, setErrors] = useState(genFormFieldNames(loginFormFields, true))
+
+    const onChange = useCallback((val, fieldName) => {
+        setFormValues({ ...formValues, [fieldName]: val })
+    }, [formValues])
+
+    const handleSetErrorMsg = (errorMsg, fieldName) => {
+        setErrors({ ...errors, [fieldName]: errorMsg })
+    }
 
 
     const handleLogin = async () => {
         try {
+            const hasErrors = Object.values(errors).filter(error => error !== "").length > 0
+
+            if (hasErrors) {
+                alert("1 or more fields has error, please solve that")
+                return
+            }
+
             const { data } = await callApi('post', APP_API_LIST.LOGIN, { loginInfo: formValues })
             const { id, email, clinicName, msg } = data
 
@@ -73,6 +89,8 @@ const SplashScreen = ({ navigation }) => {
                         {loginFormFields.map((formField, i) => (
                             <FormField key={`form-field-${formField.fieldName}-${i}`}
                                 formValues={formValues}
+                                onChangeHandler={onChange}
+                                errorHandler={handleSetErrorMsg}
                                 type={formField.type}
                                 fieldName={formField.fieldName}
                                 {...formField} />))
