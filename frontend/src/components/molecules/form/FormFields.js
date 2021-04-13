@@ -15,7 +15,6 @@ const FormField = ({ children, iconInfo, formValues, validateType, showName, fie
     }
 
     const handleError = (errorMsg, fieldName) => {
-        console.log("底error", errorMsg, fieldName)
         errorHandler && errorHandler(errorMsg, fieldName)
     }
 
@@ -51,7 +50,6 @@ const FormField = ({ children, iconInfo, formValues, validateType, showName, fie
     }
 
     useEffect(() => {
-        console.log("what is the formValues", formValues)
         handleError(error, fieldName)
     }, [error])
 
